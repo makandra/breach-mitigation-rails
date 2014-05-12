@@ -1,5 +1,7 @@
 require 'base64'
 require 'rack/utils'
+require 'securerandom'
+require 'breach_mitigation/core_ext/base64'
 
 module BreachMitigation
   class MaskingSecrets

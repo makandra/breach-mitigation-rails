@@ -1,8 +1,13 @@
-# breach-mitigation-rails
+# breach-mitigation-rails (Rails 2.3 backport)
 
-Makes Rails 3 and 4 applications less susceptible to the BREACH /
+Makes Rails applications less susceptible to the BREACH /
 CRIME attacks. See [breachattack.com](http://breachattack.com/) for
 details.
+
+## About this fork
+
+This is a fork which backports `breach-mitigation-rails` to work on
+Rails 2.3 and Ruby 1.8.7.
 
 ## How it works
 
@@ -34,15 +39,19 @@ do to prevent or mitigate this class of attacks.
 
 Add this line to your Rails Gemfile:
 
-    gem 'breach-mitigation-rails'
+    gem 'breach-mitigation-rails', :git => 'https://github.com/makandra/breach-mitigation-rails.git', :branch => 'rails-2.3'
 
 And then execute:
 
     $ bundle
 
-The length-hiding can be disabled by doing:
+**Important**: On Rails 2.3, the gem can not inject its middleware automatically.
+You have to explicitly do that in order for the *Length Hiding* strategy to work.
 
-    Rails.application.config.exclude_breach_length_hiding = true
+Add to your `config/environment.rb`, in the `Rails::Initializer` block:
+
+    require 'breach_mitigation/length_hiding'
+    config.middleware.use BreachMitigation::LengthHiding
 
 For most Rails apps, that should be enough, but read on for the gory
 details...
@@ -64,3 +73,8 @@ details...
 
 Pull requests are welcome, either to enhance the existing mitigation
 strategies or to add new ways to mitigate against the attack.
+
+## Credits
+
+* Original code by [Bradley Buda](https://github.com/meldium/breach-mitigation-rails)
+* Rails 2.3 port by [makandra](http://www.makandra.com/) / [Ruby Backports](http://rubybackports.com)

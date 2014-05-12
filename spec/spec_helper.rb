@@ -1,6 +1,5 @@
 require 'rubygems'
 require 'bundler/setup'
-require 'securerandom'
 
 require 'breach-mitigation-rails'
 

@@ -9,8 +9,8 @@ module BreachMitigation
     def call(env)
       status, headers, body = @app.call(env)
 
-      # Only pad HTML/XHTML documents
-      if headers['Content-Type'] =~ /text\/x?html/ && Rack::Request.new(env).ssl?
+      # Only pad HTML/XHTML documents, and only on HTTPS connections
+      if headers['Content-Type'] =~ /text\/x?html/ && ssl?(env)
         # Copy the existing response to a new object
         response = Rack::Response.new(body, status, headers)
 
@@ -21,6 +21,16 @@ module BreachMitigation
         response.finish
       else
         [status, headers, body]
+      end
+    end
+
+    def ssl?(env)
+      request = Rack::Request.new(env)
+      if request.respond_to? :ssl?
+        request.ssl?
+      else
+        # There is no Rack::Request#ssl? on Rack 1.1, so we do the check ourselves
+        request.scheme == 'https'
       end
     end
 
@@ -41,9 +51,16 @@ module BreachMitigation
       # data itself doesn't need to be strongly random; it just needs
       # to be resistant to compression
       length = SecureRandom.random_number(MAX_LENGTH)
-      junk = (0...length).inject("") { |junk| junk << ALPHABET[rand(ALPHABET.size)] }
+      junk = (0...length).inject('', &method(:generate_junk))
 
       "\n<!-- This is a random-length HTML comment: #{junk} -->".html_safe
+    end
+
+    def generate_junk(junk, *args)
+      # While Ruby 1.9's `Enumerable#inject` yields only the object, Ruby 1.8
+      # also passes each item from the list as a 2nd argument.
+      # We only want to modify the given object, and ignore any extra arguments.
+      junk << ALPHABET[rand(ALPHABET.size)]
     end
   end
 end
