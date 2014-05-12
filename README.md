@@ -78,3 +78,5 @@ strategies or to add new ways to mitigate against the attack.
 
 * Original code by [Bradley Buda](https://github.com/meldium/breach-mitigation-rails)
 * Rails 2.3 port by [makandra](http://www.makandra.com/) / [Ruby Backports](http://rubybackports.com)
+* Rails 2.3 port sponsored by [HotGloo](http://www.hotgloo.com/) - Wireframe UX Prototyping Tool
+* 
