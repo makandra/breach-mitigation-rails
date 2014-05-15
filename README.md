@@ -9,7 +9,7 @@ details.
 This is a fork which backports `breach-mitigation-rails` to work on
 Rails 2.3 and Ruby 1.8.7.
 
-Backport by [Ruby Backports](http://rubybackports.com)
+Backport by [Ruby Backports](http://rubybackports.com).
 
 ## How it works
 
