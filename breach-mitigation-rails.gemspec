@@ -18,7 +18,11 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "activesupport", '~> 2.3'
+  # Have the most sensible ActiveSupport for gem development, but allow employ-
+  # ment in all Railses.
+  spec.add_dependency 'activesupport'
+  spec.add_development_dependency 'activesupport', '~> 2.3'
+
   spec.add_dependency "rack"
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rspec"
