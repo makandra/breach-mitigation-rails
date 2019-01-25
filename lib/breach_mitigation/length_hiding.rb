@@ -10,7 +10,7 @@ module BreachMitigation
       status, headers, body = @app.call(env)
 
       # Only pad HTML/XHTML documents, and only on HTTPS connections
-      if headers['Content-Type'] =~ /text\/x?html/ && ssl?(env)
+      if headers['Content-Type'] =~ /text\/x?html/ && ssl?(env) && !looks_like_a_file?(body)
         # Copy the existing response to a new object
         response = Rack::Response.new(body, status, headers)
 
@@ -24,6 +24,8 @@ module BreachMitigation
       end
     end
 
+    private
+
     def ssl?(env)
       request = Rack::Request.new(env)
       if request.respond_to? :ssl?
@@ -34,7 +36,9 @@ module BreachMitigation
       end
     end
 
-    private
+    def looks_like_a_file?(body)
+      body.respond_to?(:to_path)
+    end
 
     # Append a comment from 0 to MAX_LENGTH bytes in size to the
     # response body. See section 3.1 of "BREACH: Reviving the CRIME

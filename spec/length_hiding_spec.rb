@@ -45,6 +45,12 @@ describe BreachMitigation::LengthHiding do
       response.body.join.should == 'Hello Universe'
     end
 
+    it 'does not inject the comment into a response that looks like it\'s coming from send_file' do
+      response_from_app.stub(:to_path => '/path/to/file')
+      status, headers, response = subject.call(env)
+      response.body.join.should == 'Hello Universe'
+    end
+
     it 'does not inject the comment on HTTP connections' do
       env['rack.url_scheme'] = 'http'
       status, headers, response = subject.call(env)
